@@ -1,63 +1,52 @@
-﻿using Dapper;
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using Dapper;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MySql.Data.MySqlClient;
 using Npgsql;
-using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using WatchDog.src.Enums;
 using WatchDog.src.Exceptions;
 using WatchDog.src.Models;
 using WatchDog.src.Utilities;
 
-namespace WatchDog.src.Data
-{
-    internal static class ExternalDbContext
-    {
+namespace WatchDog.src.Data {
+    internal static class ExternalDbContext {
         private static string _connectionString = WatchDogExternalDbConfig.ConnectionString;
 
-        public static IDbConnection CreateSQLConnection()
-            => WatchDogDatabaseDriverOption.DatabaseDriverOption switch
-            {
-                WatchDogDbDriverEnum.MSSQL => CreateMSSQLConnection(),
-                WatchDogDbDriverEnum.MySql => CreateMySQLConnection(),
-                WatchDogDbDriverEnum.PostgreSql => CreatePostgresConnection(),
-                _ => throw new NotSupportedException()
-            };
+        public static IDbConnection CreateSQLConnection() => WatchDogDatabaseDriverOption.DatabaseDriverOption
+        switch {
+            WatchDogDbDriverEnum.MSSQL => CreateMSSQLConnection(),
+            WatchDogDbDriverEnum.MySql => CreateMySQLConnection(),
+            WatchDogDbDriverEnum.PostgreSql => CreatePostgresConnection(),
+            _ =>
+            throw new NotSupportedException()
+        };
 
         public static void Migrate() => BootstrapTables();
 
-        public static void BootstrapTables()
-        {
+        public static void BootstrapTables() {
             var createWatchTablesQuery = GetSqlQueryString();
 
-            using (var connection = CreateSQLConnection())
-            {
-                try
-                {
+            using(var connection = CreateSQLConnection()) {
+                try {
                     connection.Open();
-                    _ =  connection.Query(createWatchTablesQuery);
+                    _ = connection.Query(createWatchTablesQuery);
                     connection.Close();
-                }
-                catch (SqlException ae)
-                {
+                } catch (SqlException ae) {
                     Debug.WriteLine(ae.Message.ToString());
                     throw ae;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     throw new WatchDogDatabaseException(ex.Message);
                 }
             }
 
         }
 
-        public static void MigrateNoSql()
-        {
-            try
-            {
+        public static void MigrateNoSql() {
+            try {
                 var mongoClient = CreateMongoDBConnection();
                 var database = mongoClient.GetDatabase(WatchDogExternalDbConfig.MongoDbName);
                 _ = database.GetCollection<WatchLog>(Constants.WatchLogTableName);
@@ -73,27 +62,23 @@ namespace WatchDog.src.Data
                 bool exists = collections.Any();
                 var _counter = database.GetCollection<Sequence>(Constants.WatchDogMongoCounterTableName);
 
-                if (!exists)
-                {
-                    var sequence = new Sequence
-                    {
+                if (!exists) {
+                    var sequence = new Sequence {
                         _Id = "sequenceId",
                         Value = 0
                     };
                     _counter.InsertOne(sequence);
                 }
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 Debug.WriteLine(ex.Message.ToString());
                 throw new WatchDogDatabaseException(ex.Message);
             }
         }
 
         public static string GetSqlQueryString() =>
-            WatchDogDatabaseDriverOption.DatabaseDriverOption switch
-            {
-                WatchDogDbDriverEnum.MSSQL => @$"
+            WatchDogDatabaseDriverOption.DatabaseDriverOption
+        switch {
+            WatchDogDbDriverEnum.MSSQL => @$"
                                   IF OBJECT_ID('dbo.{Constants.WatchLogTableName}', 'U') IS NULL CREATE TABLE {Constants.WatchLogTableName} (
                                   id              INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                                   responseBody    VARCHAR(max),
@@ -216,52 +201,36 @@ namespace WatchDog.src.Data
                              );
                         ",
                 _ => ""
-            };
+        };
 
-        public static NpgsqlConnection CreatePostgresConnection()
-        {
-            try
-            {
+        public static NpgsqlConnection CreatePostgresConnection() {
+            try {
                 return new NpgsqlConnection(_connectionString);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new WatchDogDatabaseException(ex.Message);
             }
         }
 
-        public static MySqlConnection CreateMySQLConnection()
-        {
-            try
-            {
+        public static MySqlConnection CreateMySQLConnection() {
+            try {
                 return new MySqlConnection(_connectionString);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new WatchDogDatabaseException(ex.Message);
             }
         }
 
-        public static SqlConnection CreateMSSQLConnection()
-        {
-            try
-            {
+        public static SqlConnection CreateMSSQLConnection() {
+            try {
                 return new SqlConnection(_connectionString);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new WatchDogDatabaseException(ex.Message);
             }
         }
 
-        public static MongoClient CreateMongoDBConnection()
-        {
-            try
-            {
+        public static MongoClient CreateMongoDBConnection() {
+            try {
                 return new MongoClient(_connectionString);
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 throw new WatchDogDatabaseException(ex.Message);
             }
         }

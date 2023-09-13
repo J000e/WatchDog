@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace WatchDog.src.Models
-{
-    public class WatchLog
-    {
+namespace WatchDog.src.Models {
+    public class WatchLog {
         public int Id { get; set; }
         public string ResponseBody { get; set; }
         public int ResponseStatus { get; set; }

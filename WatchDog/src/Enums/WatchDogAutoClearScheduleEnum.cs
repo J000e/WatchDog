@@ -1,7 +1,5 @@
-﻿namespace WatchDog.src.Enums
-{
-    public enum WatchDogAutoClearScheduleEnum
-    {
+﻿namespace WatchDog.src.Enums {
+    public enum WatchDogAutoClearScheduleEnum {
         Daily = 1,
         Weekly,
         Monthly,

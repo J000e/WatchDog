@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace WatchDog.src.Models
-{
-    public class WatchLoggerModel
-    {
+namespace WatchDog.src.Models {
+    public class WatchLoggerModel {
         public int Id { get; set; }
         public string EventId { get; set; } = string.Empty;
         public string Message { get; set; }
