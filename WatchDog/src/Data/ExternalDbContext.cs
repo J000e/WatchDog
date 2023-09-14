@@ -21,8 +21,7 @@ namespace WatchDog.src.Data {
             WatchDogDbDriverEnum.MSSQL => CreateMSSQLConnection(),
             WatchDogDbDriverEnum.MySql => CreateMySQLConnection(),
             WatchDogDbDriverEnum.PostgreSql => CreatePostgresConnection(),
-            _ =>
-            throw new NotSupportedException()
+            _ => throw new NotSupportedException()
         };
 
         public static void Migrate() => BootstrapTables();

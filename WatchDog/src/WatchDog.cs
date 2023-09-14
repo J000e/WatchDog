@@ -111,7 +111,7 @@ namespace WatchDog.src {
                         await originalResponseBody.CopyToAsync(originalBodyStream);
                         return responseBodyDto;
                     }
-                } catch (OutOfMemoryException ex) {
+                } catch (OutOfMemoryException) {
                     return new ResponseModel {
                         ResponseBody = "OutOfMemoryException occured while trying to read response body",
                             ResponseStatus = context.Response.StatusCode,

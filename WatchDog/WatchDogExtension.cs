@@ -91,14 +91,11 @@ namespace WatchDog {
                 FileProvider = new EmbeddedFileProvider(
                         typeof(WatchDogExtension).GetTypeInfo().Assembly,
                         "WatchDog.src.WatchPage"),
-
                     RequestPath = new PathString("/WTCHDGstatics")
             });
 
             app.Build();
-
             app.UseAuthorization();
-
             app.UseSession();
 
             if (!string.IsNullOrEmpty(options.CorsPolicy))
