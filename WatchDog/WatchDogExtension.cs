@@ -31,7 +31,8 @@ namespace WatchDog {
             AutoClearModel.ClearTimeSchedule = options.ClearTimeSchedule;
             WatchDogExternalDbConfig.ConnectionString = options.SetExternalDbConnString;
             WatchDogDatabaseDriverOption.DatabaseDriverOption = options.DbDriverOption;
-            WatchDogExternalDbConfig.MongoDbName = Assembly.GetCallingAssembly().GetName().Name?.Replace('.', '_') + "_WatchDogDB";
+            string callingAssemblyName = Assembly.GetCallingAssembly().GetName().Name;
+            WatchDogExternalDbConfig.MongoDbName = callingAssemblyName?.Replace('.', '_') + "_WatchDogDB";
 
             if (!string.IsNullOrEmpty(WatchDogExternalDbConfig.ConnectionString) && WatchDogDatabaseDriverOption.DatabaseDriverOption == 0)
                 throw new WatchDogDBDriverException("Missing DB Driver Option: DbDriverOption is required at .AddWatchDogServices()");
@@ -41,6 +42,7 @@ namespace WatchDog {
             services.AddDistributedMemoryCache();
 
             services.AddSession(options => {
+                options.Cookie.Name = $"{callingAssemblyName}.Session";
                 options.IdleTimeout = TimeSpan.FromMinutes(5);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
