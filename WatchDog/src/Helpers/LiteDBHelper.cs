@@ -23,7 +23,7 @@ namespace WatchDog.src.Helpers {
             if (!string.IsNullOrEmpty(statusCode)) {
                 query.Where(l => l.ResponseStatus.ToString() == statusCode);
             }
-            return query.OrderByDescending(x => x.Id).ToPaginatedList(pageNumber);
+            return query.OrderByDescending(x => x.Id).ToPaginatedList(pageNumber, CustomConfiguration.PageSize);
         }
         public static int InsertWatchLog(WatchLog log) {
             return _watchLogs.Insert(log);
@@ -40,7 +40,7 @@ namespace WatchDog.src.Helpers {
                 searchString = searchString.ToLower();
                 query.Where(l => l.Message.ToLower().Contains(searchString) || l.StackTrace.ToLower().Contains(searchString) || l.Source.ToLower().Contains(searchString));
             }
-            return query.OrderByDescending(x => x.Id).ToPaginatedList(pageNumber);
+            return query.OrderByDescending(x => x.Id).ToPaginatedList(pageNumber, CustomConfiguration.PageSize);
         }
 
         public static int InsertWatchExceptionLog(WatchExceptionLog log) {
@@ -66,7 +66,7 @@ namespace WatchDog.src.Helpers {
             if (!string.IsNullOrEmpty(logLevelString)) {
                 query.Where(l => l.LogLevel.ToLower() == logLevelString.ToLower());
             }
-            return query.OrderByDescending(x => x.Id).ToPaginatedList(pageNumber);
+            return query.OrderByDescending(x => x.Id).ToPaginatedList(pageNumber, CustomConfiguration.PageSize);
         }
 
         // CLEAR ALL LOGS
