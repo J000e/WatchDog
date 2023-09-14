@@ -104,8 +104,8 @@
             overflow: auto
         }
 
-        .logo{
-            height:35px;
+        .logo {
+            height: 35px;
         }
 
         /*Skeleton Loader*/
@@ -130,9 +130,8 @@
             border-radius: 0.3rem;
         }
     </style>
-
-
 </head>
+
 <body>
     <section class="ftco-section pb-5">
         <div class="container">
@@ -160,7 +159,6 @@
                 <button data-toggle="modal" data-target="#clearLogsModal" class="btn-sm btn btn-dark m-1 float-right">Clear Logs</button>
                 <button onclick="logOut()" class="btn-sm btn btn-dark m-1 float-right">Log out</button>
             </div>
-
 
             <div class="tab-content">
                 <div id="requestTab" class="tab-pane fade in active show">
@@ -327,8 +325,8 @@
             </div>
         </div>
     </section>
-    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="Watchdog requestlist" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-body p-5 shadow-lg">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -336,19 +334,31 @@
                     </button>
                     <h3 class="lead fa-underline">WatchLog</h3>
                     <div class="row">
-                        <div class="col-md-12 m">
-                            <p><b>Host: </b> <span id="host"></span></p>
-                            <p style="word-wrap: break-word;"><b>Path: </b> <span id="path"></span></p>
-                            <p style="word-wrap: break-word;"><b>Query: </b> <span id="query"></span></p>
-                            <p><b>Method: </b> <span id="method"></span></p>
-                            <p><b>IP Address: </b> <span id="ip"></span></p>
-                            <p><b>Status Code: </b> <span id="statusCode"></span></p>
-                            <p style="word-wrap: break-word;"><b>Time Spent: </b> <span id="time"></span></p>
-                            <p style="word-wrap: break-word;"><b>Time Stamp: </b> <span id="startTime"></span></p>
-                        </div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Host:</div>
+                        <div class="col-md-4"><span id="host"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Paht:</div>
+                        <div class="col-md-4"><span id="path"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Query:</div>
+                        <div class="col-md-4"><span id="query"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Method:</div>
+                        <div class="col-md-4"><span id="method"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">IP Address:</div>
+                        <div class="col-md-4"><span id="ip"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Status Code:</div>
+                        <div class="col-md-4"><span id="statusCode"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Time Spent:</div>
+                        <div class="col-md-4"><span id="time"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Time Stamp:</div>
+                        <div class="col-md-4"><span id="startTime"></span></div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-12 purplebg m mt-3">
-
-
                             <div class="row d-flex justify-content-between mx-1 mx-sm-3 mb-0 pb-0 border-0">
                                 <div class="tabs active" id="tab01">
                                     <h6 class="font-weight-bold">Request</h6>
@@ -388,72 +398,94 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="myExceptionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal" id="myExceptionModal" tabindex="-1" role="dialog" aria-labelledby="Watchdog exceptions" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-body p-5 shadow-lg">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h3 class="lead fa-underline">WatchLog Exceptions</h3>
-                    <div class="">
-                        <p style="word-wrap: break-word"><b>Message: </b> <span id="exMessage"></span></p>
-                        <p style="word-wrap: break-word"><b>TypeOf: </b> <span id="exTypeOf"></span></p>
-                        <p style="word-wrap: break-word"><b>Source: </b> <span id="exSource"></span></p>
-                        <p style="word-wrap: break-word"><b>Method: </b> <span id="exMethod"></span></p>
-                        <p style="word-wrap: break-word"><b>Path: </b> <span id="exPath"></span></p>
-                        <p style="word-wrap: break-word"><b>Query: </b> <span id="exQuery"></span></p>
-                        <p style="word-wrap: break-word"><b>Encountered At: </b> <span id="exTime"></span></p>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Message:</div>
+                        <div class="col-md-10"><span id="exMessage"></span></div>
                     </div>
-                    <div class="">
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">TypeOf:</div>
+                        <div class="col-md-10"><span id="exTypeOf"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Source:</div>
+                        <div class="col-md-4"><span id="exSource"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Method:</div>
+                        <div class="col-md-4"><span id="exMethod"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Path:</div>
+                        <div class="col-md-4"><span id="exPath"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Query:</div>
+                        <div class="col-md-4"><span id="exQuery"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Encountered At:</div>
+                        <div class="col-md-4"><span id="exTime"></span></div>
+                    </div>
+                    <div class="mt-2">
                         <a href="#" id="exStackTraceCopy" onclick="copyToClipboard(event, 'exStackTrace', 'exStackTraceCopy')" style="display:none" class="float-right">Copy</a>
-                        <p class="lead"><b>Stack Trace:</b> </p>
+                        <h3 class="lead fa-underline">Stack Trace:</h3>
                         <pre id="exStackTrace" class="bg-light p-2"></pre>
 
                         <a href="#" id="exReqBodyCopy" onclick="copyToClipboard(event, 'exReqBody', 'exReqBodyCopy')" style="display:none" class="float-right">Copy</a>
-                        <p class="lead"><b>Request Body:</b> </p>
+                        <h3 class="lead fa-underline">Request Body:</h3>
                         <pre id="exReqBody" class="bg-light p-2"></pre>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="myInCodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal" id="myInCodeModal" tabindex="-1" role="dialog" aria-labelledby="Watchdog logs" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body p-5 shadow-lg">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     <h3 class="lead fa-underline mb-3">In-Code Log</h3>
-                    <div class="">
-                        <p style="word-wrap: break-word"><b>Event Id: </b> <span id="incodeEventId"></span></p>
-                        <p style="word-wrap: break-word"><b>From File: </b> <span id="incodeFrom"></span></p>
-                        <p style="word-wrap: break-word"><b>Method: </b> <span id="incodeMethod"></span></p>
-                        <p style="word-wrap: break-word"><b>Line: </b> <span id="incodeLine"></span></p>
-                        <p style="word-wrap: break-word"><b>Log Level: </b> <span id="incodeLogLevel"></span></p>
-                        <p style="word-wrap: break-word"><b>Encountered At: </b> <span id="incodeTime"></span></p>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Event Id:</div>
+                        <div class="col-md-4"><span id="incodeEventId"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">From File:</div>
+                        <div class="col-md-4"><span id="incodeFrom"></span></div>
                     </div>
-                    <div class="">
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Method:</div>
+                        <div class="col-md-4"><span id="incodeMethod"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Line:</div>
+                        <div class="col-md-4"><span id="incodeLine"></span></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Log Level:</div>
+                        <div class="col-md-4"><span id="incodeLogLevel"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">Encountered At:</div>
+                        <div class="col-md-4"><span id="incodeTime"></span></div>
+                    </div>
+                    <div class="mt-2">
                         <a href="#" id="incodeMessageCopy" onclick="copyToClipboard(event, 'incodeMessage', 'incodeMessageCopy')" style="display:none" class="float-right">Copy</a>
-                        <p class="lead"><b>Message:</b> </p>
+                        <h3 class="lead fa-underline mb-3">Message:</h3>
                         <pre id="incodeMessage" class="bg-light p-2"></pre>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="myLoginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal" id="myLoginModal" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body p-5">
@@ -462,9 +494,7 @@
                         <form id="myLoginForm">
                             <input class="form-control m-1 mb-3" type="text" placeholder="Enter Username" name="uname" id="uname" required>
                             <input class="form-control m-1" type="password" placeholder="Enter Password" name="psw" id="psw" required>
-
                         </form>
-
                         <button class="btn btn-sm btn-dark m-1 mt-3" style="width:100%" onclick="login()" type="submit">Login</button>
                     </div>
 
@@ -473,7 +503,7 @@
         </div>
     </div>
 
-    <div class="modal" id="clearLogsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
+    <div class="modal" id="clearLogsModal" tabindex="-1" role="dialog" aria-labelledby="Confirmation" aria-hidden="true" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body p-5 text-center">
@@ -488,12 +518,15 @@
         </div>
     </div>
 
-
-
-
-
-
     <script type="text/javascript">
+        const timestampFormat = 'YYYY.MM.DD HH:mm:ss.SSSS';
+        const displayAuth = async() => {
+            const isAuthenticated = await hasAuth();
+            if (isAuthenticated === false) {
+                $('#myLoginModal').modal('show');
+            }
+        }
+
         $(document).ready(function () {
             $(".tabs").click(function () {
                 $(".tabs").removeClass("active");
@@ -520,12 +553,7 @@
                 });
             });
 
-            hasAuth().then(
-                (data) => {
-                    if (data === false) {
-                        $('#myLoginModal').modal('show');
-                    }
-                })
+            displayAuth();
         });
 
         var pageIndex = 1;
@@ -543,17 +571,17 @@
                 const firstDigitStr = String(data.log.responseStatus)[0];
                 var statusColor = firstDigitStr === '2' ? "text-success" : firstDigitStr === '1' || firstDigitStr === '3' ? "text-primary" : "text-danger";
                 const tr = $("<tr data-toggle='modal' data-target='#myModal' aria-expanded='false' aria-controls='collapse' class='collapsed'>" +
-                    "<td><b>" + data.log.method + "</b></td><td>" + truncate(data.log.path, 50) + "</td><td><b class='" + statusColor + "'> " + data.log.responseStatus + "</b></td><td>" + data.log.timeSpent + "</td><td>" + moment(data.log.startTime).format('LLL') + "</td></tr>");
+                    "<td><b>" + data.log.method + "</b></td><td>" + truncate(data.log.path, 50) + "</td><td><b class='" + statusColor + "'> " + data.log.responseStatus + "</b></td><td>" + data.log.timeSpent + "</td><td>" + moment(data.log.startTime).format(timestampFormat) + "</td></tr>");
                 tr.on('click', populateModal.bind(null, data.log));
                 $('#tableBody').prepend(tr);
             } else if (data.type === "exLog") {
                 const tr = $("<tr data-toggle='modal' data-target='#myExceptionModal' aria-expanded='false' aria-controls='collapse' class='collapsed'>" +
-                    "<td><b>" + data.log.source + "</b></td><td>" + truncate(data.log.message, 50) + "</td><td>" + data.log.typeOf + "</td><td>" + moment(data.log.encounteredAt).format('LLL') + "</td></tr > ");
+                    "<td><b>" + data.log.source + "</b></td><td>" + truncate(data.log.message, 50) + "</td><td>" + data.log.typeOf + "</td><td>" + moment(data.log.encounteredAt).format(timestampFormat) + "</td></tr > ");
                 tr.on('click', populateExceptionModal.bind(null, data.log));
                 $('#tableBodyEx').prepend(tr);
             } else if (data.type === "log") {
                 const tr = $("<tr data-toggle='modal' data-target='#myInCodeModal' aria-expanded='false' aria-controls='collapse' class='collapsed'>" +
-                    "<td><b>" + moment(data.log.timestamp).format('LLL') + "</b></td><td>" + (data.log.callingFrom ??= '') + "\nLine:" + data.log.lineNumber + "</td><td>" + (data.log.callingMethod ??= '') + "</td><td>" + data.log.logLevel + "</td><td>" + truncate(data.log.message, 50) + "</td></tr > ");
+                    "<td><b>" + moment(data.log.timestamp).format(timestampFormat) + "</b></td><td>" + (data.log.callingFrom ??= '') + "\nLine:" + data.log.lineNumber + "</td><td>" + (data.log.callingMethod ??= '') + "</td><td>" + data.log.logLevel + "</td><td>" + truncate(data.log.message, 50) + "</td></tr > ");
                 tr.on('click', populateInCodeModal.bind(null, data.log));
                 $('#tableBodyInCode').prepend(tr);
             }
@@ -628,7 +656,7 @@
                         const firstDigitStr = String(data.logs[i].responseStatus)[0];
                         var statusColor = firstDigitStr === '2' ? "text-success" : firstDigitStr === '1' || firstDigitStr === '3' ? "text-primary" : "text-danger";
                         const tr = $("<tr data-toggle='modal' data-target='#myModal' aria-expanded='false' aria-controls='collapse" + i + "' class='collapsed'>" +
-                            "<td><b>" + data.logs[i].method + "</b></td><td>" + truncate(data.logs[i].path, 50) + "</td><td><b class='" + statusColor + "'> " + data.logs[i].responseStatus + "</b ></td ><td>" + data.logs[i].timeSpent + "</td><td>" + moment(data.logs[i].startTime).format('LLL') + "</td></tr > ");
+                            "<td><b>" + data.logs[i].method + "</b></td><td>" + truncate(data.logs[i].path, 50) + "</td><td><b class='" + statusColor + "'> " + data.logs[i].responseStatus + "</b ></td ><td>" + data.logs[i].timeSpent + "</td><td>" + moment(data.logs[i].startTime).format(timestampFormat) + "</td></tr > ");
                         tr.on('click', populateModal.bind(null, data.logs[i]));
                         $('#tableBody').append(tr);
                     }
@@ -670,7 +698,7 @@
 
                     for (var i = 0; i < data.logs.length; i++) {
                         const tr = $("<tr data-toggle='modal' data-target='#myExceptionModal' aria-expanded='false' aria-controls='collapse" + i + "' class='collapsed'>" +
-                            "<td><b>" + data.logs[i].source + "</b></td><td>" + truncate(data.logs[i].message, 50) + "</td><td>" + data.logs[i].typeOf + "</td><td>" + moment(data.logs[i].encounteredAt).format('LLL') + "</td></tr > ");
+                            "<td><b>" + data.logs[i].source + "</b></td><td>" + truncate(data.logs[i].message, 50) + "</td><td>" + data.logs[i].typeOf + "</td><td>" + moment(data.logs[i].encounteredAt).format(timestampFormat) + "</td></tr > ");
                         tr.on('click', populateExceptionModal.bind(null, data.logs[i]));
                         $('#tableBodyEx').append(tr);
                     }
@@ -697,7 +725,6 @@
                     }
                     else {
                         $('#inCodeNext').show();
-
                     }
 
                     if (data.hasPrevious === false) {
@@ -711,7 +738,7 @@
 
                     for (var i = 0; i < data.logs.length; i++) {
                         const tr = $("<tr data-toggle='modal' data-target='#myInCodeModal' aria-expanded='false' aria-controls='collapse" + i + "' class='collapsed'>" +
-                            "<td><b>" + moment(data.logs[i].timestamp).format('LLL') + "</b></td><td>" + (data.logs[i].callingFrom ??= '') + "\nLine:" + data.logs[i].lineNumber + "</td><td>" + (data.logs[i].callingMethod ??= '') + "</td><td>" + data.logs[i].logLevel + "</td><td>" + truncate(data.logs[i].message, 50) + "</td></tr > ");
+                            "<td><b>" + moment(data.logs[i].timestamp).format(timestampFormat) + "</b></td><td>" + (data.logs[i].callingFrom ??= '') + "\nLine:" + data.logs[i].lineNumber + "</td><td>" + (data.logs[i].callingMethod ??= '') + "</td><td>" + data.logs[i].logLevel + "</td><td>" + truncate(data.logs[i].message, 50) + "</td></tr > ");
                         tr.on('click', populateInCodeModal.bind(null, data.logs[i]));
                         $('#tableBodyInCode').append(tr);
                     }
@@ -864,12 +891,10 @@
                     },
                     context: document.body,
                     success: function (data) {
-
                         window.location.reload()
                     }
                 });
             }
-
         }
 
         function hasAuth() {
@@ -887,8 +912,6 @@
             });
         }
 
-       
-
         function populateModal(data) {
             $('#host').text(data.host);
             $('#path').text(data.path);
@@ -897,7 +920,7 @@
             $('#ip').text(data.ipAddress);
             $('#statusCode').text(data.responseStatus);
             $('#time').text(data.timeSpent);
-            $('#startTime').text(moment(data.startTime).format('LLL'));
+            $('#startTime').text(moment(data.startTime).format(timestampFormat));
 
             $('#reqHd').text(data.requestHeaders);
             $('#resHd').text(data.responseHeaders);
@@ -932,7 +955,7 @@
             $('#exMessage').text(data.message);
             $('#exTypeOf').text(data.typeOf);
             $('#exSource').text(data.source);
-            $('#exTime').text(moment(data.encounteredAt).format('LLL'));
+            $('#exTime').text(moment(data.encounteredAt).format(timestampFormat));
             $('#exStackTrace').text(data.stackTrace);
             $('#exReqBody').text(data.requestBody);
             $('#exPath').text(data.path);
@@ -965,7 +988,7 @@
             $('#incodeFrom').text(data.callingFrom);
             $('#incodeLine').text(data.lineNumber);
             $('#incodeMethod').text(data.callingMethod);
-            $('#incodeTime').text(moment(data.timestamp).format('LLL'));
+            $('#incodeTime').text(moment(data.timestamp).format(timestampFormat));
             $('#incodeLogLevel').text(data.logLevel);
             $('#incodeMessage').text(data.message);
             $('#incodeEventId').text(data.eventId);
@@ -1009,6 +1032,5 @@
             }
         }
     </script>
-
 </body>
 </html>

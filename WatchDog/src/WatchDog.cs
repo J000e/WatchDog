@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,14 +20,15 @@ namespace WatchDog.src {
         private readonly RequestDelegate _next;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
         private readonly IBroadcastHelper _broadcastHelper;
+        private readonly ILogger<WatchDog> logger;
         private readonly WatchDogOptionsModel _options;
 
-        public WatchDog(WatchDogOptionsModel options, RequestDelegate next, IBroadcastHelper broadcastHelper) {
+        public WatchDog(WatchDogOptionsModel options, RequestDelegate next, IBroadcastHelper broadcastHelper, ILogger<WatchDog> logger) {
             _next = next;
             _options = options;
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
             _broadcastHelper = broadcastHelper;
-
+            this.logger = logger;
             Serializer = options.Serializer;
             WatchDogConfigModel.UserName = _options.WatchPageUsername;
             WatchDogConfigModel.Password = _options.WatchPagePassword;
@@ -57,7 +59,7 @@ namespace WatchDog.src {
                     Host = requestLog.Host,
                     RequestBody = requestLog.RequestBody,
                     ResponseBody = responseLog.ResponseBody,
-                    TimeSpent = string.Format("{0:D1} hrs {1:D1} mins {2:D1} secs {3:D1} ms", timeSpent.Hours, timeSpent.Minutes, timeSpent.Seconds, timeSpent.Milliseconds),
+                    TimeSpent = ifNonZero(timeSpent.Hours, n => $"{n} hr")+ifNonZero(timeSpent.Minutes, n => $"{n} min")+ifNonZero(timeSpent.Seconds, n => $"{n} sec")+ifNonZero(timeSpent.Milliseconds, n => $"{n} mill"),
                     RequestHeaders = requestLog.Headers,
                     ResponseHeaders = responseLog.Headers,
                     StartTime = requestLog.StartTime,
@@ -71,6 +73,14 @@ namespace WatchDog.src {
             }
         }
 
+        private string ifNonZero(int number, Func<int, string> formatCallback) {
+            if (number <= 0) {
+                return string.Empty;
+            }
+            string plural = number > 1 ? "s" : "";
+            return $"{formatCallback.Invoke(number)}{plural} ";
+        }
+
         private async Task<RequestModel> LogRequest(HttpContext context) {
             var startTime = DateTime.Now;
 
@@ -81,7 +91,7 @@ namespace WatchDog.src {
                 Method = context.Request.Method.ToString(),
                 QueryString = context.Request.QueryString.ToString(),
                 StartTime = startTime,
-                Headers = context.Request.Headers.Select(x => x.ToString()).Aggregate((a, b) => a + ": " + b),
+                Headers = context.Request.Headers.formatHeader(),
             };
 
             if (context.Request.ContentLength > 1) {
@@ -108,7 +118,7 @@ namespace WatchDog.src {
                             ResponseBody = shortenBody(responseBody),
                             ResponseStatus = context.Response.StatusCode,
                             FinishTime = DateTime.Now,
-                            Headers = context.Response.Headers.ContentLength > 0 ? context.Response.Headers.Select(x => x.ToString()).Aggregate((a, b) => a + ": " + b) : string.Empty,
+                            Headers = context.Response.Headers.ContentLength > 0 ? context.Response.Headers.formatHeader() : string.Empty,
                         };
                         await originalResponseBody.CopyToAsync(originalBodyStream);
                         return responseBodyDto;
@@ -118,7 +128,7 @@ namespace WatchDog.src {
                         ResponseBody = "OutOfMemoryException occured while trying to read response body",
                             ResponseStatus = context.Response.StatusCode,
                             FinishTime = DateTime.Now,
-                            Headers = context.Response.Headers.ContentLength > 0 ? context.Response.Headers.Select(x => x.ToString()).Aggregate((a, b) => a + ": " + b) : string.Empty,
+                            Headers = context.Response.Headers.ContentLength > 0 ? context.Response.Headers.formatHeader() : string.Empty,
                     };
                 } finally {
                     context.Response.Body = originalBodyStream;
@@ -129,6 +139,7 @@ namespace WatchDog.src {
         private string shortenBody(string body) {
             try {
                 JObject jsonObj = JObject.Parse(body);
+                logger.LogDebug($"Body is looking like a json: {body}");
 
                 foreach (JProperty property in jsonObj.DescendantsAndSelf().OfType<JProperty>()) {
                     if (property.Value is JValue jValue && jValue.Type == JTokenType.String) {
@@ -141,7 +152,9 @@ namespace WatchDog.src {
 
                 return jsonObj.ToString(Formatting.Indented);
             } catch (JsonReaderException) {
-                return body.Substring(0, 200);
+                logger.LogDebug($"Body is not a json: {body}");
+
+                return body.Length > 200 ? body.Substring(0, 200) : body;
             }
         }
     }

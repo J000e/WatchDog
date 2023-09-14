@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using WatchDog.src.Enums;
 using WatchDog.src.Models;
+using System.Linq;
 
 namespace WatchDog.src.Helpers {
     internal static class GeneralHelper {
@@ -46,5 +48,7 @@ namespace WatchDog.src.Helpers {
                     .SetPriority(CacheItemPriority.High);
             }
         }
+
+        public static string formatHeader(this IHeaderDictionary headers) => headers.Select(x => x.ToString()).Aggregate((a, b) => $"{a}\n{b}");
     }
 }
