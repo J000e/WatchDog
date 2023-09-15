@@ -59,7 +59,10 @@ namespace WatchDog.src {
                     Host = requestLog.Host,
                     RequestBody = requestLog.RequestBody,
                     ResponseBody = responseLog.ResponseBody,
-                    TimeSpent = ifNonZero(timeSpent.Hours, n => $"{n} hr")+ifNonZero(timeSpent.Minutes, n => $"{n} min")+ifNonZero(timeSpent.Seconds, n => $"{n} sec")+ifNonZero(timeSpent.Milliseconds, n => $"{n} mill"),
+                    TimeSpent = ifNonZero(timeSpent.Hours, n => $"{n} hr") +
+                        ifNonZero(timeSpent.Minutes, n => $"{n} min") +
+                        ifNonZero(timeSpent.Seconds, n => $"{n} sec") +
+                        ifNonZero(timeSpent.Milliseconds, n => $"{n} ms"),
                     RequestHeaders = requestLog.Headers,
                     ResponseHeaders = responseLog.Headers,
                     StartTime = requestLog.StartTime,
@@ -78,8 +81,7 @@ namespace WatchDog.src {
             if (number <= 0) {
                 return string.Empty;
             }
-            string plural = number > 1 ? "s" : "";
-            return $"{formatCallback.Invoke(number)}{plural} ";
+            return $"{formatCallback.Invoke(number)} ";
         }
 
         private async Task<RequestModel> LogRequest(HttpContext context) {
