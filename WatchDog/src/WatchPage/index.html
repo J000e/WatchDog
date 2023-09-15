@@ -207,6 +207,7 @@
                                             <th scope="col">Status Code</th>
                                             <th scope="col">Time Spent</th>
                                             <th scope="col">Time Stamp</th>
+                                            <th scope="col">UserName</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBody">
@@ -250,6 +251,7 @@
                                             <th scope="col">Message</th>
                                             <th scope="col">TypeOf</th>
                                             <th scope="col">Encountered At</th>
+                                            <th scope="col">UserName</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tableBodyEx">
@@ -342,18 +344,23 @@
                     <div class="row">
                         <div class="col-md-2 font-weight-bold text-nowrap">Query:</div>
                         <div class="col-md-4"><span id="query"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">UserName:</div>
+                        <div class="col-md-4"><span id="userName"></span></div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-2 font-weight-bold text-nowrap">Method:</div>
                         <div class="col-md-4"><span id="method"></span></div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-2 font-weight-bold text-nowrap">IP Address:</div>
                         <div class="col-md-4"><span id="ip"></span></div>
-                        <div class="col-md-2 font-weight-bold text-nowrap">Status Code:</div>
-                        <div class="col-md-4"><span id="statusCode"></span></div>
                     </div>
                     <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Status Code:</div>
+                        <div class="col-md-4"><span id="statusCode"></span></div>
                         <div class="col-md-2 font-weight-bold text-nowrap">Time Spent:</div>
                         <div class="col-md-4"><span id="time"></span></div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-2 font-weight-bold text-nowrap">Time Stamp:</div>
                         <div class="col-md-4"><span id="startTime"></span></div>
                     </div>
@@ -428,10 +435,12 @@
                     <div class="row">
                         <div class="col-md-2 font-weight-bold text-nowrap">Path:</div>
                         <div class="col-md-4"><span id="exPath"></span></div>
-                        <div class="col-md-2 font-weight-bold text-nowrap">Query:</div>
-                        <div class="col-md-4"><span id="exQuery"></span></div>
+                        <div class="col-md-2 font-weight-bold text-nowrap">UserName:</div>
+                        <div class="col-md-4"><span id="exUserName"></span></div>
                     </div>
                     <div class="row">
+                        <div class="col-md-2 font-weight-bold text-nowrap">Query:</div>
+                        <div class="col-md-4"><span id="exQuery"></span></div>
                         <div class="col-md-2 font-weight-bold text-nowrap">Encountered At:</div>
                         <div class="col-md-4"><span id="exTime"></span></div>
                     </div>
@@ -571,12 +580,12 @@
                 const firstDigitStr = String(data.log.responseStatus)[0];
                 var statusColor = firstDigitStr === '2' ? "text-success" : firstDigitStr === '1' || firstDigitStr === '3' ? "text-primary" : "text-danger";
                 const tr = $("<tr data-toggle='modal' data-target='#myModal' aria-expanded='false' aria-controls='collapse' class='collapsed'>" +
-                    "<td><b>" + data.log.method + "</b></td><td>" + truncate(data.log.path, 50) + "</td><td><b class='" + statusColor + "'> " + data.log.responseStatus + "</b></td><td>" + data.log.timeSpent + "</td><td>" + moment(data.log.startTime).format(timestampFormat) + "</td></tr>");
+                    "<td><b>" + data.log.method + "</b></td><td>" + truncate(data.log.path, 50) + "</td><td><b class='" + statusColor + "'> " + data.log.responseStatus + "</b></td><td>" + data.log.timeSpent + "</td><td>" + moment(data.log.startTime).format(timestampFormat) + "</td><td>" + truncate(data.log.userName, 50) + "</td></tr>");
                 tr.on('click', populateModal.bind(null, data.log));
                 $('#tableBody').prepend(tr);
             } else if (data.type === "exLog") {
                 const tr = $("<tr data-toggle='modal' data-target='#myExceptionModal' aria-expanded='false' aria-controls='collapse' class='collapsed'>" +
-                    "<td><b>" + data.log.source + "</b></td><td>" + truncate(data.log.message, 50) + "</td><td>" + data.log.typeOf + "</td><td>" + moment(data.log.encounteredAt).format(timestampFormat) + "</td></tr > ");
+                    "<td><b>" + data.log.source + "</b></td><td>" + truncate(data.log.message, 50) + "</td><td>" + data.log.typeOf + "</td><td>" + moment(data.log.encounteredAt).format(timestampFormat) + "</td><td>" + truncate(data.log.userName, 50) + "</td></tr > ");
                 tr.on('click', populateExceptionModal.bind(null, data.log));
                 $('#tableBodyEx').prepend(tr);
             } else if (data.type === "log") {
@@ -636,27 +645,15 @@
                 success: function (data) {
                     var totalPages = data.totalPages === 0 ? 1 : data.totalPages
                     $('#pageMap').text("Page " + data.pageIndex + " of " + totalPages);
-                    if (data.hasNext === false) {
-                        $('#next').hide();
-                    }
-                    else {
-                        $('#next').show();
-                    }
-
-                    if (data.hasPrevious === false) {
-                        $('#prev').hide();
-                    }
-                    else {
-                        $('#prev').show();
-                    }
-
+                    $('#next')[data.hasNext ? 'hide' : 'show']();
+                    $('#prev')[data.hasPrevious ? 'hide' : 'show']();
                     $('#rqLoader').hide();
 
                     for (var i = 0; i < data.logs.length; i++) {
                         const firstDigitStr = String(data.logs[i].responseStatus)[0];
                         var statusColor = firstDigitStr === '2' ? "text-success" : firstDigitStr === '1' || firstDigitStr === '3' ? "text-primary" : "text-danger";
                         const tr = $("<tr data-toggle='modal' data-target='#myModal' aria-expanded='false' aria-controls='collapse" + i + "' class='collapsed'>" +
-                            "<td><b>" + data.logs[i].method + "</b></td><td>" + truncate(data.logs[i].path, 50) + "</td><td><b class='" + statusColor + "'> " + data.logs[i].responseStatus + "</b ></td ><td>" + data.logs[i].timeSpent + "</td><td>" + moment(data.logs[i].startTime).format(timestampFormat) + "</td></tr > ");
+                            "<td><b>" + data.logs[i].method + "</b></td><td>" + truncate(data.logs[i].path, 50) + "</td><td><b class='" + statusColor + "'> " + data.logs[i].responseStatus + "</b ></td ><td>" + data.logs[i].timeSpent + "</td><td>" + moment(data.logs[i].startTime).format(timestampFormat) + "</td><td>" + truncate(data.logs[i].userName, 50) + "</td></tr > ");
                         tr.on('click', populateModal.bind(null, data.logs[i]));
                         $('#tableBody').append(tr);
                     }
@@ -679,26 +676,13 @@
                 success: function (data) {
                     var totalPages = data.totalPages === 0 ? 1 : data.totalPages
                     $('#exPageMap').text("Page " + data.pageIndex + " of " + totalPages);
-                    if (data.hasNext === false) {
-                        $('#exNext').hide();
-                    }
-                    else {
-                        $('#exNext').show();
-
-                    }
-
-                    if (data.hasPrevious === false) {
-                        $('#exPrev').hide();
-                    }
-                    else {
-                        $('#exPrev').show();
-                    }
-
+                    $('#exNext')[data.hasNext ? 'hide' : 'show']();
+                    $('#exPrev')[data.hasPrevious ? 'hide' : 'show']();
                     $('#exLoader').hide();
 
                     for (var i = 0; i < data.logs.length; i++) {
                         const tr = $("<tr data-toggle='modal' data-target='#myExceptionModal' aria-expanded='false' aria-controls='collapse" + i + "' class='collapsed'>" +
-                            "<td><b>" + data.logs[i].source + "</b></td><td>" + truncate(data.logs[i].message, 50) + "</td><td>" + data.logs[i].typeOf + "</td><td>" + moment(data.logs[i].encounteredAt).format(timestampFormat) + "</td></tr > ");
+                            "<td><b>" + data.logs[i].source + "</b></td><td>" + truncate(data.logs[i].message, 50) + "</td><td>" + data.logs[i].typeOf + "</td><td>" + moment(data.logs[i].encounteredAt).format(timestampFormat) + "</td><td>" + truncate(data.logs[i].userName, 50) + "</td></tr > ");
                         tr.on('click', populateExceptionModal.bind(null, data.logs[i]));
                         $('#tableBodyEx').append(tr);
                     }
@@ -720,20 +704,8 @@
                 success: function (data) {
                     var totalPages = data.totalPages === 0 ? 1 : data.totalPages
                     $('#inCodePageMap').text("Page " + data.pageIndex + " of " + totalPages);
-                    if (data.hasNext === false) {
-                        $('#inCodeNext').hide();
-                    }
-                    else {
-                        $('#inCodeNext').show();
-                    }
-
-                    if (data.hasPrevious === false) {
-                        $('#inCodePrev').hide();
-                    }
-                    else {
-                        $('#inCodePrev').show();
-                    }
-
+                    $('#inCodeNext')[data.hasNext ? 'hide' : 'show']();
+                    $('#inCodePrev')[data.hasPrevious ? 'hide' : 'show']();
                     $('#incodeLoader').hide();
 
                     for (var i = 0; i < data.logs.length; i++) {
@@ -919,6 +891,7 @@
             $('#method').text(data.method);
             $('#ip').text(data.ipAddress);
             $('#statusCode').text(data.responseStatus);
+            $('#userName').text(data.userName);
             $('#time').text(data.timeSpent);
             $('#startTime').text(moment(data.startTime).format(timestampFormat));
 
@@ -959,6 +932,7 @@
             $('#exStackTrace').text(data.stackTrace);
             $('#exReqBody').text(data.requestBody);
             $('#exPath').text(data.path);
+            $('#exUserName').text(data.userName);
             $('#exMethod').text(data.method);
             $('#exQuery').text(data.queryString);
 
@@ -1025,7 +999,7 @@
         }
 
         function truncate(str, num) {
-            if (str.length > num) {
+            if (str && str.length > num) {
                 return str.slice(0, num) + "...";
             } else {
                 return str;

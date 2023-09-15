@@ -92,7 +92,8 @@ namespace WatchDog.src.Data {
                                   ipAddress       VARCHAR(30),
                                   timeSpent       VARCHAR(100),
                                   startTime       VARCHAR(100) NOT NULL,
-                                  endTime         VARCHAR(100) NOT NULL
+                                  endTime         VARCHAR(100) NOT NULL,
+                                  userName        VARCHAR(50)
                             );
                                 IF OBJECT_ID('dbo.{PersistenceHelper.GetExceptionsTable()}', 'U') IS NULL CREATE TABLE {PersistenceHelper.GetExceptionsTable()} (
                                 id            INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
@@ -104,7 +105,8 @@ namespace WatchDog.src.Data {
                                 method        VARCHAR(30),
                                 queryString   VARCHAR(max),
                                 requestBody   VARCHAR(max),
-                                encounteredAt VARCHAR(100) NOT NULL
+                                encounteredAt VARCHAR(100) NOT NULL,
+                                userName      VARCHAR(50)
                              );
                                 IF OBJECT_ID('dbo.{PersistenceHelper.GetLogsTable()}', 'U') IS NULL CREATE TABLE {PersistenceHelper.GetLogsTable()} (
                                 id            INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
@@ -133,7 +135,8 @@ namespace WatchDog.src.Data {
                               ipAddress       VARCHAR(30),
                               timeSpent       VARCHAR(100),
                               startTime       VARCHAR(100) NOT NULL,
-                              endTime         VARCHAR(100) NOT NULL
+                              endTime         VARCHAR(100) NOT NULL,
+                              userName        VARCHAR(50)
                             );
                            CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetExceptionsTable()} (
                                 id            INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -145,7 +148,8 @@ namespace WatchDog.src.Data {
                                 method        VARCHAR(30),
                                 queryString   VARCHAR(65535),
                                 requestBody   TEXT(65535),
-                                encounteredAt VARCHAR(100) NOT NULL
+                                encounteredAt VARCHAR(100) NOT NULL,
+                                userName      VARCHAR(50)
                              );
                            CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetLogsTable()} (
                                 id            INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -174,7 +178,8 @@ namespace WatchDog.src.Data {
                               ipAddress       VARCHAR(30),
                               timeSpent       VARCHAR,
                               startTime       TIMESTAMP with time zone NOT NULL,
-                              endTime         TIMESTAMP with time zone NOT NULL
+                              endTime         TIMESTAMP with time zone NOT NULL,
+                              userName        VARCHAR(50)
                             );
                            CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetExceptionsTable()} (
                                 id            SERIAL PRIMARY KEY,
@@ -186,7 +191,8 @@ namespace WatchDog.src.Data {
                                 method        VARCHAR(30),
                                 queryString   VARCHAR,
                                 requestBody   VARCHAR,
-                                encounteredAt TIMESTAMP with time zone NOT NULL
+                                encounteredAt TIMESTAMP with time zone NOT NULL,
+                                userName      VARCHAR(50)
                              );
                            CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetLogsTable()} (
                                 id            SERIAL PRIMARY KEY,

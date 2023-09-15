@@ -63,7 +63,8 @@ namespace WatchDog.src {
                     RequestHeaders = requestLog.Headers,
                     ResponseHeaders = responseLog.Headers,
                     StartTime = requestLog.StartTime,
-                    EndTime = responseLog.FinishTime
+                    EndTime = responseLog.FinishTime,
+                    UserName = requestLog.UserName
                 };
 
                 await DynamicDBManager.InsertWatchLog(watchLog);
@@ -86,6 +87,7 @@ namespace WatchDog.src {
 
             var requestBodyDto = new RequestModel() {
                 RequestBody = string.Empty,
+                UserName = context.User.Identity?.Name ?? "N/A",
                 Host = context.Request.Host.ToString(),
                 Path = context.Request.Path.ToString(),
                 Method = context.Request.Method.ToString(),

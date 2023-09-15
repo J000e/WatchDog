@@ -39,8 +39,8 @@ namespace WatchDog.src.Helpers {
 
         public static async Task InsertWatchLog(WatchLog log) {
             bool isPostgres = GeneralHelper.IsPostgres();
-            var query = @$"INSERT INTO {PersistenceHelper.GetRequestsTable()} (responseBody,responseStatus,requestBody,queryString,path,requestHeaders,responseHeaders,method,host,ipAddress,timeSpent,startTime,endTime) " +
-                "VALUES (@ResponseBody,@ResponseStatus,@RequestBody,@QueryString,@Path,@RequestHeaders,@ResponseHeaders,@Method,@Host,@IpAddress,@TimeSpent,@StartTime,@EndTime);";
+            var query = @$"INSERT INTO {PersistenceHelper.GetRequestsTable()} (responseBody,responseStatus,requestBody,queryString,path,requestHeaders,responseHeaders,method,host,ipAddress,timeSpent,startTime,endTime,userName) " +
+                "VALUES (@ResponseBody,@ResponseStatus,@RequestBody,@QueryString,@Path,@RequestHeaders,@ResponseHeaders,@Method,@Host,@IpAddress,@TimeSpent,@StartTime,@EndTime, @UserName);";
 
             var parameters = new DynamicParameters();
             parameters.Add("ResponseBody", isPostgres ? log.ResponseBody.Replace("\u0000", "") : log.ResponseBody, DbType.String);
@@ -54,6 +54,7 @@ namespace WatchDog.src.Helpers {
             parameters.Add("Host", log.Host, DbType.String);
             parameters.Add("IpAddress", log.IpAddress, DbType.String);
             parameters.Add("TimeSpent", log.TimeSpent, DbType.String);
+            parameters.Add("UserName", log.UserName, DbType.String);
 
             if (isPostgres) {
                 parameters.Add("StartTime", log.StartTime.ToUniversalTime(), DbType.DateTime);
@@ -85,8 +86,8 @@ namespace WatchDog.src.Helpers {
         }
 
         public static async Task InsertWatchExceptionLog(WatchExceptionLog log) {
-            var query = @$"INSERT INTO {PersistenceHelper.GetExceptionsTable()} (message,stackTrace,typeOf,source,path,method,queryString,requestBody,encounteredAt) " +
-                "VALUES (@Message,@StackTrace,@TypeOf,@Source,@Path,@Method,@QueryString,@RequestBody,@EncounteredAt);";
+            var query = @$"INSERT INTO {PersistenceHelper.GetExceptionsTable()} (message,stackTrace,typeOf,source,path,method,queryString,requestBody,encounteredAt,userName) " +
+                "VALUES (@Message,@StackTrace,@TypeOf,@Source,@Path,@Method,@QueryString,@RequestBody,@EncounteredAt,@UserName);";
 
             var parameters = new DynamicParameters();
             parameters.Add("Message", log.Message, DbType.String);
@@ -97,6 +98,7 @@ namespace WatchDog.src.Helpers {
             parameters.Add("Method", log.Method, DbType.String);
             parameters.Add("QueryString", log.QueryString, DbType.String);
             parameters.Add("RequestBody", log.RequestBody, DbType.String);
+            parameters.Add("UserName", log.UserName, DbType.String);
 
             if (GeneralHelper.IsPostgres()) {
                 parameters.Add("EncounteredAt", log.EncounteredAt.ToUniversalTime(), DbType.DateTime);

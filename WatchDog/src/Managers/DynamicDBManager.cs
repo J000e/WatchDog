@@ -12,8 +12,6 @@ namespace WatchDog.src.Managers {
         }
         private static string _connectionString = WatchDogExternalDbConfig.ConnectionString;
 
-        //private static bool isExternalDb() => !string.IsNullOrEmpty(_connectionString);
-
         private static TargetDbEnum GetTargetDbEnum {
             get {
                 if (string.IsNullOrEmpty(_connectionString)) {

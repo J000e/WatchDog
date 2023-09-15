@@ -25,16 +25,18 @@ namespace WatchDog.src {
         }
         public async Task LogException(Exception ex, RequestModel requestModel) {
             Debug.WriteLine("The following exception is logged: " + ex.Message);
-            var watchExceptionLog = new WatchExceptionLog();
-            watchExceptionLog.EncounteredAt = DateTime.Now;
-            watchExceptionLog.Message = ex.Message;
-            watchExceptionLog.StackTrace = ex.StackTrace;
-            watchExceptionLog.Source = ex.Source;
-            watchExceptionLog.TypeOf = ex.GetType().ToString();
-            watchExceptionLog.Path = requestModel?.Path;
-            watchExceptionLog.Method = requestModel?.Method;
-            watchExceptionLog.QueryString = requestModel?.QueryString;
-            watchExceptionLog.RequestBody = requestModel?.RequestBody;
+            var watchExceptionLog = new WatchExceptionLog {
+                EncounteredAt = DateTime.Now,
+                Message = ex.Message,
+                StackTrace = ex.StackTrace,
+                Source = ex.Source,
+                TypeOf = ex.GetType().ToString(),
+                Path = requestModel?.Path,
+                Method = requestModel?.Method,
+                QueryString = requestModel?.QueryString,
+                RequestBody = requestModel?.RequestBody,
+                UserName = requestModel?.UserName ?? "N/A"
+            };
 
             //Insert
             await DynamicDBManager.InsertWatchExceptionLog(watchExceptionLog);

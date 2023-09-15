@@ -10,5 +10,6 @@ namespace WatchDog.src.Models {
         public string? Host { get; set; }
         public string? IpAddress { get; set; }
         public DateTime StartTime { get; set; }
+        public string UserName { get; internal set; }
     }
 }
