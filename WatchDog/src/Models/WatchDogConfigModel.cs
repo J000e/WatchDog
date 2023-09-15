@@ -13,6 +13,7 @@ namespace WatchDog.src.Models {
         public string SetExternalDbConnString { get; set; } = string.Empty;
         public WatchDogDbDriverEnum DbDriverOption { get; set; }
         public int PageSize { get; set; } = 20;
+        public string TableNamePrefix { get; set; } = string.Empty;
     }
 
     public static class WatchDogExternalDbConfig {
@@ -21,7 +22,8 @@ namespace WatchDog.src.Models {
     }
 
     public static class CustomConfiguration {
-        public static int PageSize { get; set; }
+        public static int PageSize { get; internal set; }
+        public static string TableNamePrefix { get; internal set; }
     }
 
     public static class WatchDogDatabaseDriverOption {

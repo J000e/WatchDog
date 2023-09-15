@@ -32,8 +32,7 @@ namespace WatchDog.src.Managers {
             TargetDbEnum.SqlDb => await SQLDbHelper.ClearLogs(),
             TargetDbEnum.LiteDb => LiteDBHelper.ClearAllLogs(),
             TargetDbEnum.MongoDb => await MongoDBHelper.ClearAllLogs(),
-            _ =>
-            throw new NotImplementedException()
+            _ => throw new NotImplementedException()
         };
 
         // WATCHLOG OPERATIONS
@@ -43,8 +42,7 @@ namespace WatchDog.src.Managers {
             TargetDbEnum.SqlDb => await SQLDbHelper.GetAllWatchLogs(searchString, verbString, statusCode, pageNumber),
             TargetDbEnum.LiteDb => LiteDBHelper.GetAllWatchLogs(searchString, verbString, statusCode, pageNumber),
             TargetDbEnum.MongoDb => MongoDBHelper.GetAllWatchLogs(searchString, verbString, statusCode, pageNumber),
-            _ =>
-            throw new NotImplementedException()
+            _ => throw new NotImplementedException()
         };
 
         public static async Task InsertWatchLog(WatchLog log) {
@@ -68,8 +66,7 @@ namespace WatchDog.src.Managers {
             TargetDbEnum.SqlDb => await SQLDbHelper.GetAllWatchExceptionLogs(searchString, pageNumber),
             TargetDbEnum.LiteDb => LiteDBHelper.GetAllWatchExceptionLogs(searchString, pageNumber),
             TargetDbEnum.MongoDb => MongoDBHelper.GetAllWatchExceptionLogs(searchString, pageNumber),
-            _ =>
-            throw new NotImplementedException()
+            _ => throw new NotImplementedException()
         };
 
         public static async Task InsertWatchExceptionLog(WatchExceptionLog log) {
@@ -93,8 +90,7 @@ namespace WatchDog.src.Managers {
             TargetDbEnum.SqlDb => await SQLDbHelper.GetAllLogs(searchString, logLevelString, pageNumber),
             TargetDbEnum.LiteDb => LiteDBHelper.GetAllLogs(searchString, logLevelString, pageNumber),
             TargetDbEnum.MongoDb => MongoDBHelper.GetAllLogs(searchString, logLevelString, pageNumber),
-            _ =>
-            throw new NotImplementedException()
+            _ => throw new NotImplementedException()
         };
 
         public static async Task InsertLog(WatchLoggerModel log) {

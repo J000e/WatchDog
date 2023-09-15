@@ -1,12 +1,13 @@
 ﻿using LiteDB;
 using WatchDog.src.Models;
+using WatchDog.src.Utilities;
 
 namespace WatchDog.src.Helpers {
     internal static class LiteDBHelper {
         public static LiteDatabase db = new LiteDatabase("watchlogs.db");
-        static ILiteCollection<WatchLog> _watchLogs = db.GetCollection<WatchLog>("WatchLogs");
-        static ILiteCollection<WatchExceptionLog> _watchExLogs = db.GetCollection<WatchExceptionLog>("WatchExceptionLogs");
-        static ILiteCollection<WatchLoggerModel> _logs = db.GetCollection<WatchLoggerModel>("Logs");
+        static readonly ILiteCollection<WatchLog> _watchLogs = db.GetCollection<WatchLog>(PersistenceHelper.GetRequestsTable());
+        static readonly ILiteCollection<WatchExceptionLog> _watchExLogs = db.GetCollection<WatchExceptionLog>(PersistenceHelper.GetExceptionsTable());
+        static readonly ILiteCollection<WatchLoggerModel> _logs = db.GetCollection<WatchLoggerModel>(PersistenceHelper.GetLogsTable());
 
         //WATCH lOGS OPERATION
         public static Page<WatchLog> GetAllWatchLogs(string searchString, string verbString, string statusCode, int pageNumber) {

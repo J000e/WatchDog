@@ -48,18 +48,18 @@ namespace WatchDog.src.Data {
             try {
                 var mongoClient = CreateMongoDBConnection();
                 var database = mongoClient.GetDatabase(WatchDogExternalDbConfig.MongoDbName);
-                _ = database.GetCollection<WatchLog>(Constants.WatchLogTableName);
-                _ = database.GetCollection<WatchExceptionLog>(Constants.WatchLogExceptionTableName);
-                _ = database.GetCollection<WatchLoggerModel>(Constants.LogsTableName);
+                _ = database.GetCollection<WatchLog>(PersistenceHelper.GetRequestsTable());
+                _ = database.GetCollection<WatchExceptionLog>(PersistenceHelper.GetExceptionsTable());
+                _ = database.GetCollection<WatchLoggerModel>(PersistenceHelper.GetLogsTable());
 
                 //Seed counterDb
-                var filter = new BsonDocument("name", Constants.WatchDogMongoCounterTableName);
+                var filter = new BsonDocument("name", PersistenceHelper.GetMongoCounterTable());
 
                 // Check if the collection exists
                 var collections = database.ListCollections(new ListCollectionsOptions { Filter = filter });
 
                 bool exists = collections.Any();
-                var _counter = database.GetCollection<Sequence>(Constants.WatchDogMongoCounterTableName);
+                var _counter = database.GetCollection<Sequence>(PersistenceHelper.GetMongoCounterTable());
 
                 if (!exists) {
                     var sequence = new Sequence {
@@ -78,7 +78,7 @@ namespace WatchDog.src.Data {
             WatchDogDatabaseDriverOption.DatabaseDriverOption
         switch {
             WatchDogDbDriverEnum.MSSQL => @$"
-                                  IF OBJECT_ID('dbo.{Constants.WatchLogTableName}', 'U') IS NULL CREATE TABLE {Constants.WatchLogTableName} (
+                                  IF OBJECT_ID('dbo.{PersistenceHelper.GetRequestsTable()}', 'U') IS NULL CREATE TABLE {PersistenceHelper.GetRequestsTable()} (
                                   id              INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                                   responseBody    VARCHAR(max),
                                   responseStatus  int NOT NULL,
@@ -94,7 +94,7 @@ namespace WatchDog.src.Data {
                                   startTime       VARCHAR(100) NOT NULL,
                                   endTime         VARCHAR(100) NOT NULL
                             );
-                                IF OBJECT_ID('dbo.{Constants.WatchLogExceptionTableName}', 'U') IS NULL CREATE TABLE {Constants.WatchLogExceptionTableName} (
+                                IF OBJECT_ID('dbo.{PersistenceHelper.GetExceptionsTable()}', 'U') IS NULL CREATE TABLE {PersistenceHelper.GetExceptionsTable()} (
                                 id            INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                                 message       VARCHAR(max),
                                 stackTrace    VARCHAR(max),
@@ -106,7 +106,7 @@ namespace WatchDog.src.Data {
                                 requestBody   VARCHAR(max),
                                 encounteredAt VARCHAR(100) NOT NULL
                              );
-                                IF OBJECT_ID('dbo.{Constants.LogsTableName}', 'U') IS NULL CREATE TABLE {Constants.LogsTableName} (
+                                IF OBJECT_ID('dbo.{PersistenceHelper.GetLogsTable()}', 'U') IS NULL CREATE TABLE {PersistenceHelper.GetLogsTable()} (
                                 id            INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                                 eventId       VARCHAR(100),
                                 message       VARCHAR(max),
@@ -119,7 +119,7 @@ namespace WatchDog.src.Data {
                         ",
 
                 WatchDogDbDriverEnum.MySql => @$"
-                             CREATE TABLE IF NOT EXISTS {Constants.WatchLogTableName} (
+                             CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetRequestsTable()} (
                               id              INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                               responseBody    TEXT(65535),
                               responseStatus  INT NOT NULL,
@@ -135,7 +135,7 @@ namespace WatchDog.src.Data {
                               startTime       VARCHAR(100) NOT NULL,
                               endTime         VARCHAR(100) NOT NULL
                             );
-                           CREATE TABLE IF NOT EXISTS {Constants.WatchLogExceptionTableName} (
+                           CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetExceptionsTable()} (
                                 id            INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                                 message       TEXT(65535),
                                 stackTrace    TEXT(65535),
@@ -147,7 +147,7 @@ namespace WatchDog.src.Data {
                                 requestBody   TEXT(65535),
                                 encounteredAt VARCHAR(100) NOT NULL
                              );
-                           CREATE TABLE IF NOT EXISTS {Constants.LogsTableName} (
+                           CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetLogsTable()} (
                                 id            INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
                                 eventId       VARCHAR(100),
                                 message       TEXT(65535),
@@ -160,7 +160,7 @@ namespace WatchDog.src.Data {
                         ",
 
                 WatchDogDbDriverEnum.PostgreSql => @$"
-                             CREATE TABLE IF NOT EXISTS {Constants.WatchLogTableName} (
+                             CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetRequestsTable()} (
                               id              SERIAL PRIMARY KEY,
                               responseBody    VARCHAR,
                               responseStatus  int NOT NULL,
@@ -176,7 +176,7 @@ namespace WatchDog.src.Data {
                               startTime       TIMESTAMP with time zone NOT NULL,
                               endTime         TIMESTAMP with time zone NOT NULL
                             );
-                           CREATE TABLE IF NOT EXISTS {Constants.WatchLogExceptionTableName} (
+                           CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetExceptionsTable()} (
                                 id            SERIAL PRIMARY KEY,
                                 message       VARCHAR,
                                 stackTrace    VARCHAR,
@@ -188,7 +188,7 @@ namespace WatchDog.src.Data {
                                 requestBody   VARCHAR,
                                 encounteredAt TIMESTAMP with time zone NOT NULL
                              );
-                           CREATE TABLE IF NOT EXISTS {Constants.LogsTableName} (
+                           CREATE TABLE IF NOT EXISTS {PersistenceHelper.GetLogsTable()} (
                                 id            SERIAL PRIMARY KEY,
                                 eventId       VARCHAR(100),
                                 message       VARCHAR,

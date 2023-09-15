@@ -34,6 +34,7 @@ namespace WatchDog {
             string callingAssemblyName = Assembly.GetCallingAssembly().GetName().Name;
             WatchDogExternalDbConfig.MongoDbName = callingAssemblyName?.Replace('.', '_') + "_WatchDogDB";
             CustomConfiguration.PageSize = options.PageSize;
+            CustomConfiguration.TableNamePrefix = options.TableNamePrefix;
 
             if (!string.IsNullOrEmpty(WatchDogExternalDbConfig.ConnectionString) && WatchDogDatabaseDriverOption.DatabaseDriverOption == 0)
                 throw new WatchDogDBDriverException("Missing DB Driver Option: DbDriverOption is required at .AddWatchDogServices()");

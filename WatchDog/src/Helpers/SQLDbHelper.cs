@@ -9,7 +9,7 @@ namespace WatchDog.src.Helpers {
     internal static class SQLDbHelper {
         // WATCHLOG OPERATIONS
         public static async Task<Page<WatchLog>> GetAllWatchLogs(string searchString, string verbString, string statusCode, int pageNumber) {
-            var query = @$"SELECT * FROM {Constants.WatchLogTableName} ";
+            var query = @$"SELECT * FROM {PersistenceHelper.GetRequestsTable()} ";
 
             if (!string.IsNullOrEmpty(searchString) || !string.IsNullOrEmpty(verbString) || !string.IsNullOrEmpty(statusCode))
                 query += "WHERE ";
@@ -39,7 +39,7 @@ namespace WatchDog.src.Helpers {
 
         public static async Task InsertWatchLog(WatchLog log) {
             bool isPostgres = GeneralHelper.IsPostgres();
-            var query = @$"INSERT INTO {Constants.WatchLogTableName} (responseBody,responseStatus,requestBody,queryString,path,requestHeaders,responseHeaders,method,host,ipAddress,timeSpent,startTime,endTime) " +
+            var query = @$"INSERT INTO {PersistenceHelper.GetRequestsTable()} (responseBody,responseStatus,requestBody,queryString,path,requestHeaders,responseHeaders,method,host,ipAddress,timeSpent,startTime,endTime) " +
                 "VALUES (@ResponseBody,@ResponseStatus,@RequestBody,@QueryString,@Path,@RequestHeaders,@ResponseHeaders,@Method,@Host,@IpAddress,@TimeSpent,@StartTime,@EndTime);";
 
             var parameters = new DynamicParameters();
@@ -72,7 +72,7 @@ namespace WatchDog.src.Helpers {
 
         // WATCH EXCEPTION OPERATIONS
         public static async Task<Page<WatchExceptionLog>> GetAllWatchExceptionLogs(string searchString, int pageNumber) {
-            var query = @$"SELECT * FROM {Constants.WatchLogExceptionTableName} ";
+            var query = @$"SELECT * FROM {PersistenceHelper.GetExceptionsTable()} ";
             if (!string.IsNullOrEmpty(searchString)) {
                 searchString = searchString.ToLower();
                 query += $"WHERE {nameof(WatchExceptionLog.Source)} LIKE '%{searchString}%' OR {nameof(WatchExceptionLog.Message)} LIKE '%{searchString}%' OR {nameof(WatchExceptionLog.StackTrace)} LIKE '%{searchString}%' ";
@@ -85,7 +85,7 @@ namespace WatchDog.src.Helpers {
         }
 
         public static async Task InsertWatchExceptionLog(WatchExceptionLog log) {
-            var query = @$"INSERT INTO {Constants.WatchLogExceptionTableName} (message,stackTrace,typeOf,source,path,method,queryString,requestBody,encounteredAt) " +
+            var query = @$"INSERT INTO {PersistenceHelper.GetExceptionsTable()} (message,stackTrace,typeOf,source,path,method,queryString,requestBody,encounteredAt) " +
                 "VALUES (@Message,@StackTrace,@TypeOf,@Source,@Path,@Method,@QueryString,@RequestBody,@EncounteredAt);";
 
             var parameters = new DynamicParameters();
@@ -111,7 +111,7 @@ namespace WatchDog.src.Helpers {
 
         // LOGS OPERATION
         public static async Task<Page<WatchLoggerModel>> GetAllLogs(string searchString, string logLevelString, int pageNumber) {
-            var query = @$"SELECT * FROM {Constants.LogsTableName} ";
+            var query = @$"SELECT * FROM {PersistenceHelper.GetLogsTable()} ";
 
             if (!string.IsNullOrEmpty(searchString) || !string.IsNullOrEmpty(logLevelString))
                 query += "WHERE ";
@@ -135,7 +135,7 @@ namespace WatchDog.src.Helpers {
         }
 
         public static async Task InsertLog(WatchLoggerModel log) {
-            var query = @$"INSERT INTO {Constants.LogsTableName} (message,eventId,timestamp,callingFrom,callingMethod,lineNumber,logLevel) " +
+            var query = @$"INSERT INTO {PersistenceHelper.GetLogsTable()} (message,eventId,timestamp,callingFrom,callingMethod,lineNumber,logLevel) " +
                 "VALUES (@Message,@EventId,@Timestamp,@CallingFrom,@CallingMethod,@LineNumber,@LogLevel);";
 
             var parameters = new DynamicParameters();
@@ -158,9 +158,9 @@ namespace WatchDog.src.Helpers {
         }
 
         public static async Task<bool> ClearLogs() {
-            var watchlogQuery = @$"truncate table {Constants.WatchLogTableName}";
-            var exQuery = @$"truncate table {Constants.WatchLogExceptionTableName}";
-            var logQuery = @$"truncate table {Constants.LogsTableName}";
+            var watchlogQuery = @$"truncate table {PersistenceHelper.GetRequestsTable()}";
+            var exQuery = @$"truncate table {PersistenceHelper.GetExceptionsTable()}";
+            var logQuery = @$"truncate table {PersistenceHelper.GetLogsTable()}";
             using(var connection = ExternalDbContext.CreateSQLConnection()) {
                 var watchlogs = await connection.ExecuteAsync(watchlogQuery);
                 var exLogs = await connection.ExecuteAsync(exQuery);
